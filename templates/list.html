@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}{{ title }} - CV Generator{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="header">
+        <h1>📋 
+            {% if section == 'skills' %}Habilidades
+            {% elif section == 'experience' %}Experiencia
+            {% elif section == 'projects' %}Proyectos
+            {% elif section == 'education' %}Formación
+            {% elif section == 'courses' %}Cursos
+            {% elif section == 'otros' %}Otros
+            {% else %}{{ title }}
+            {% endif %}
+        </h1>
+        <p>Gestione su 
+            {% if section == 'skills' %}habilidades
+            {% elif section == 'experience' %}experiencia laboral
+            {% elif section == 'projects' %}proyectos
+            {% elif section == 'education' %}formación académica
+            {% elif section == 'courses' %}cursos y certificaciones
+            {% elif section == 'otros' %}información adicional
+            {% else %}{{ section }}
+            {% endif %}
+        </p>
+    </div>
+    <div style="padding: 40px;">
+        <div style="margin-bottom: 30px;">
+            <a href="{{ url_for('add_item', section=section) }}" class="btn btn-success">➕ Añadir 
+                {% if section == 'skills' %}Habilidad
+                {% elif section == 'experience' %}Experiencia
+                {% elif section == 'projects' %}Proyecto
+                {% elif section == 'education' %}Formación
+                {% elif section == 'courses' %}Curso
+                {% elif section == 'otros' %}Elemento
+                {% else %}{{ title }}
+                {% endif %}
+            </a>
+        </div>
+        {% for index, item in items %}
+        <div class="card" style="margin-bottom: 20px;">
+            <h3>{{ item.name or item.title or item.degree or 'Sin título' }}</h3>
+            <p>{{ item.company or item.institution or item.issuer or '' }}</p>
+            <div style="margin-top: 15px;">
+                <a href="{{ url_for('edit_item', section=section, idx=index) }}" class="btn btn-secondary">✏️ Editar</a>
+                <a href="{{ url_for('delete_item', section=section, idx=index) }}" class="btn btn-danger" 
+                   onclick="return confirm('¿Está seguro de que desea eliminar este elemento?')">🗑️ Eliminar</a>
+            </div>
+        </div>
+        {% endfor %}
+        {% if not items %}
+        <div style="text-align: center; padding: 40px; color: #6c757d;">
+            <p>No hay 
+                {% if section == 'skills' %}habilidades configuradas
+                {% elif section == 'experience' %}experiencias configuradas
+                {% elif section == 'projects' %}proyectos configurados
+                {% elif section == 'education' %}formación configurada
+                {% elif section == 'courses' %}cursos configurados
+                {% elif section == 'otros' %}elementos configurados
+                {% else %}{{ section }} configurados
+                {% endif %}
+            </p>
+            <a href="{{ url_for('add_item', section=section) }}" class="btn btn-primary">➕ Añadir el primero</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

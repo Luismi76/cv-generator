@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}{{ action }} - CV Generator{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="header">
+        <h1>{{ action }} elemento</h1>
+    </div>
+    <div style="padding: 40px;">
+        <form method="POST">
+            <!-- Campos traducidos al español -->
+            {% for field in ['name', 'title', 'company', 'institution', 'degree', 'issuer', 'location', 'start', 'end', 'date', 'hours', 'level', 'description', 'notes', 'tags', 'tech', 'credential', 'periodo'] %}
+                {% if field in ['name', 'title', 'company', 'institution', 'degree', 'issuer', 'location', 'start', 'end', 'date', 'hours', 'level', 'description', 'notes', 'tags', 'tech', 'credential', 'periodo'] %}
+                <div class="form-group">
+                    <label for="{{ field }}">
+                        {% if field == 'name' %}Nombre:
+                        {% elif field == 'title' %}Título:
+                        {% elif field == 'company' %}Empresa:
+                        {% elif field == 'institution' %}Institución:
+                        {% elif field == 'degree' %}Titulación:
+                        {% elif field == 'issuer' %}Emisor:
+                        {% elif field == 'location' %}Ubicación:
+                        {% elif field == 'start' %}Fecha de inicio:
+                        {% elif field == 'end' %}Fecha de fin:
+                        {% elif field == 'date' %}Fecha:
+                        {% elif field == 'hours' %}Horas:
+                        {% elif field == 'level' %}Nivel:
+                        {% elif field == 'description' %}Descripción:
+                        {% elif field == 'notes' %}Notas:
+                        {% elif field == 'tags' %}Etiquetas:
+                        {% elif field == 'tech' %}Tecnologías:
+                        {% elif field == 'credential' %}Credencial:
+                        {% elif field == 'periodo' %}Periodo:
+                        {% else %}{{ field.title() }}:
+                        {% endif %}
+                    </label>
+                    {% if field in ['description', 'notes'] %}
+                        <textarea id="{{ field }}" name="{{ field }}" class="form-control" rows="4" 
+                                  placeholder="{% if field == 'description' %}Describe las responsabilidades y logros{% else %}Información adicional{% endif %}">{{ item.get(field, '') }}</textarea>
+                    {% elif field in ['tags', 'tech'] %}
+                        <input type="text" id="{{ field }}" name="{{ field }}" class="form-control" 
+                               value="{% if item.get(field) %}{{ item.get(field) | join(', ') }}{% endif %}"
+                               placeholder="Separar con comas">
+                    {% else %}
+                        <input type="text" id="{{ field }}" name="{{ field }}" class="form-control" 
+                               value="{{ item.get(field, '') }}"
+                               placeholder="{% if field == 'start' or field == 'end' or field == 'date' %}YYYY-MM{% elif field == 'hours' %}Número de horas{% endif %}">
+                    {% endif %}
+                </div>
+                {% endif %}
+            {% endfor %}
+            <div style="text-align: center; margin-top: 30px;">
+                <button type="submit" class="btn btn-success">💾 {{ action }}</button>
+                <a href="{{ url_for('list_items', section=section) }}" class="btn btn-secondary">❌ Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV Generator - Inicio</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(45deg, #2c3e50, #34495e);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .main-content {
+            padding: 40px;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .feature-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        
+        .feature-card.highlight {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+        
+        .feature-icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+        
+        .feature-title {
+            font-size: 1.4em;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        
+        .feature-card.highlight .feature-title {
+            color: white;
+        }
+        
+        .feature-description {
+            color: #6c757d;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .feature-card.highlight .feature-description {
+            color: rgba(255,255,255,0.9);
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+        
+        .btn-white {
+            background: white;
+            color: #667eea;
+            border: 2px solid white;
+        }
+        
+        .btn-white:hover {
+            background: rgba(255,255,255,0.9);
+            color: #5a67d8;
+        }
+        
+        .stats-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            text-align: center;
+        }
+        
+        .stat-item {
+            padding: 20px;
+        }
+        
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: #6c757d;
+            font-weight: 500;
+        }
+        
+        .cta-section {
+            text-align: center;
+            padding: 40px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 12px;
+            color: white;
+        }
+        
+        .cta-title {
+            font-size: 2em;
+            margin-bottom: 15px;
+        }
+        
+        .cta-description {
+            font-size: 1.1em;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        @media (max-width: 768px) {
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📄 Generador de CV</h1>
+            <p>Crea currículums profesionales adaptados a cada oportunidad</p>
+        </div>
+        
+        <div class="main-content">
+            <!-- Estadísticas del CV actual -->
+            <div class="stats-section">
+                <h2 style="text-align: center; margin-bottom: 30px; color: #2c3e50;">📊 Tu CV Actual</h2>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number">{{ cv.skills|length }}</div>
+                        <div class="stat-label">Habilidades</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">{{ cv.experience|length }}</div>
+                        <div class="stat-label">Experiencias</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">{{ cv.projects|length }}</div>
+                        <div class="stat-label">Proyectos</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">{{ cv.education|length }}</div>
+                        <div class="stat-label">Formación</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">{{ cv.courses|length }}</div>
+                        <div class="stat-label">Cursos</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Grid de funcionalidades -->
+            <div class="features-grid">
+                <!-- Nueva funcionalidad destacada -->
+                <div class="feature-card highlight">
+                    <div class="feature-icon">🎯</div>
+                    <h3 class="feature-title">Personalización Inteligente</h3>
+                    <p class="feature-description">
+                        ¡NUEVA FUNCIONALIDAD! Selecciona y ordena elementos específicos de tu CV para adaptarlo a cada oferta de trabajo. Guarda plantillas para diferentes tipos de puestos.
+                    </p>
+                    <a href="{{ url_for('customize') }}" class="btn btn-white">🚀 Personalizar CV</a>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📝</div>
+                    <h3 class="feature-title">Gestión Completa</h3>
+                    <p class="feature-description">
+                        Administra toda tu información profesional: contacto, experiencia, habilidades, proyectos, educación y cursos en un solo lugar.
+                    </p>
+                    <a href="{{ url_for('contact') }}" class="btn">✏️ Editar Datos</a>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">👁️</div>
+                    <h3 class="feature-title">Vista Previa</h3>
+                    <p class="feature-description">
+                        Visualiza cómo se verá tu CV antes de generarlo. Previsualización en tiempo real en diferentes formatos.
+                    </p>
+                    <a href="{{ url_for('preview') }}" class="btn">👀 Ver Preview</a>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📄</div>
+                    <h3 class="feature-title">Múltiples Formatos</h3>
+                    <p class="feature-description">
+                        Genera tu CV en diferentes formatos: Markdown para GitHub, texto plano para ATS, y más opciones próximamente.
+                    </p>
+                    <a href="{{ url_for('generate') }}" class="btn">📥 Generar CV</a>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🔄</div>
+                    <h3 class="feature-title">Plantillas Reutilizables</h3>
+                    <p class="feature-description">
+                        Guarda configuraciones específicas para diferentes tipos de trabajos: Frontend, Backend, Marketing, etc.
+                    </p>
+                    <a href="{{ url_for('customize') }}" class="btn">💾 Ver Plantillas</a>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3 class="feature-title">Optimización ATS</h3>
+                    <p class="feature-description">
+                        Adaptación automática para sistemas de seguimiento de candidatos. Mejora tus posibilidades de ser seleccionado.
+                    </p>
+                    <a href="{{ url_for('about') }}" class="btn">ℹ️ Más Info</a>
+                </div>
+            </div>
+            
+            <!-- Sección de llamada a la acción -->
+            <div class="cta-section">
+                <h2 class="cta-title">🚀 Comienza Ahora</h2>
+                <p class="cta-description">
+                    Crea CVs personalizados que destaquen en cada aplicación. Aumenta tus oportunidades de conseguir el trabajo que deseas.
+                </p>
+                <div class="btn-group">
+                    {% if cv.contact.name %}
+                        <a href="{{ url_for('customize') }}" class="btn btn-white">🎯 Personalizar Mi CV</a>
+                        <a href="{{ url_for('preview') }}" class="btn btn-white">👁️ Ver Vista Previa</a>
+                    {% else %}
+                        <a href="{{ url_for('contact') }}" class="btn btn-white">📧 Configurar Contacto</a>
+                        <a href="{{ url_for('summary') }}" class="btn btn-white">📝 Añadir Resumen</a>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Guía rápida -->
+            <div style="margin-top: 40px; padding: 30px; background: #f8f9fa; border-radius: 12px;">
+                <h3 style="color: #2c3e50; margin-bottom: 20px; text-align: center;">🗺️ Guía Rápida</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                    <div style="text-align: center; padding: 15px;">
+                        <div style="font-size: 2em; margin-bottom: 10px;">1️⃣</div>
+                        <h4 style="color: #2c3e50; margin-bottom: 8px;">Configura tus datos</h4>
+                        <p style="color: #6c757d; font-size: 0.9em;">Añade tu información de contacto, experiencia, habilidades y formación</p>
+                    </div>
+                    <div style="text-align: center; padding: 15px;">
+                        <div style="font-size: 2em; margin-bottom: 10px;">2️⃣</div>
+                        <h4 style="color: #2c3e50; margin-bottom: 8px;">Personaliza por oferta</h4>
+                        <p style="color: #6c757d; font-size: 0.9em;">Selecciona y ordena elementos relevantes para cada trabajo específico</p>
+                    </div>
+                    <div style="text-align: center; padding: 15px;">
+                        <div style="font-size: 2em; margin-bottom: 10px;">3️⃣</div>
+                        <h4 style="color: #2c3e50; margin-bottom: 8px;">Guarda plantillas</h4>
+                        <p style="color: #6c757d; font-size: 0.9em;">Crea configuraciones para diferentes tipos de puestos y reutilízalas</p>
+                    </div>
+                    <div style="text-align: center; padding: 15px;">
+                        <div style="font-size: 2em; margin-bottom: 10px;">4️⃣</div>
+                        <h4 style="color: #2c3e50; margin-bottom: 8px;">Genera y descarga</h4>
+                        <p style="color: #6c757d; font-size: 0.9em;">Obtén tu CV personalizado en el formato que necesites</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Efecto de entrada suave para las tarjetas
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.feature-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+            
+            // Animación de contadores
+            const counters = document.querySelectorAll('.stat-number');
+            counters.forEach(counter => {
+                const target = parseInt(counter.textContent);
+                counter.textContent = '0';
+                
+                let current = 0;
+                const increment = target / 30;
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        counter.textContent = target;
+                        clearInterval(timer);
+                    } else {
+                        counter.textContent = Math.ceil(current);
+                    }
+                }, 50);
+            });
+        });
+    </script>
+</body>
+</html>

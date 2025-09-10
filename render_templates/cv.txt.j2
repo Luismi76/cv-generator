@@ -1,0 +1,122 @@
+{{ contact.name or "NOMBRE" }}
+{% if contact.title %}{{ contact.title }}{% endif %}
+
+========================================
+CONTACTO
+========================================
+
+{% if contact.email %}Email: {{ contact.email }}{% endif %}
+{% if contact.phone %}Teléfono: {{ contact.phone }}{% endif %}
+{% if contact.location %}Ubicación: {{ contact.location }}{% endif %}
+
+{% if contact.links %}
+Enlaces:
+{% for link in contact.links %}
+- {{ link }}
+{% endfor %}
+{% endif %}
+
+{% if summary %}
+========================================
+RESUMEN PROFESIONAL
+========================================
+
+{{ summary }}
+{% endif %}
+
+{% if skills %}
+========================================
+HABILIDADES
+========================================
+
+{% for skill in skills %}
+- {{ skill.name }}{% if skill.level %} ({{ skill.level }}){% endif %}{% if skill.tags %} - {{ skill.tags | join(', ') }}{% endif %}
+{% endfor %}
+{% endif %}
+
+{% if experience %}
+========================================
+EXPERIENCIA PROFESIONAL
+========================================
+
+{% for exp in experience %}
+{{ exp.title }}
+{{ exp.company }}{% if exp.location %} - {{ exp.location }}{% endif %}
+{{ exp.start }} - {{ exp.end }}
+
+{% if exp.description %}
+{{ exp.description }}
+{% endif %}
+
+{% if exp.tech %}
+Tecnologías: {{ exp.tech | join(', ') }}
+{% endif %}
+
+----------------------------------------
+{% endfor %}
+{% endif %}
+
+{% if projects %}
+========================================
+PROYECTOS
+========================================
+
+{% for project in projects %}
+{{ project.title }}
+{% if project.company %}{{ project.company }} - {% endif %}{{ project.start }} - {{ project.end }}
+
+{% if project.description %}
+{{ project.description }}
+{% endif %}
+
+{% if project.tech %}
+Tecnologías: {{ project.tech | join(', ') }}
+{% endif %}
+
+----------------------------------------
+{% endfor %}
+{% endif %}
+
+{% if education %}
+========================================
+EDUCACIÓN
+========================================
+
+{% for edu in education %}
+{{ edu.degree }}
+{{ edu.institution }} - {{ edu.start }} - {{ edu.end }}
+
+{% if edu.notes %}
+{{ edu.notes }}
+{% endif %}
+
+----------------------------------------
+{% endfor %}
+{% endif %}
+
+{% if courses %}
+========================================
+CURSOS Y CERTIFICACIONES
+========================================
+
+{% for course in courses %}
+- {{ course.name }} - {{ course.issuer }} ({{ course.date }}){% if course.hours %} - {{ course.hours }} horas{% endif %}
+{% endfor %}
+{% endif %}
+
+{% if otros %}
+========================================
+INFORMACIÓN ADICIONAL
+========================================
+
+{% for otro in otros %}
+{{ otro.title }}
+{% if otro.institution %}{{ otro.institution }} - {% endif %}{{ otro.start or otro.periodo or 'Fecha no especificada' }}{% if otro.end %} - {{ otro.end }}{% endif %}
+
+{% if otro.description %}
+{{ otro.description }}
+{% endif %}
+
+----------------------------------------
+{% endfor %}
+{% endif %}

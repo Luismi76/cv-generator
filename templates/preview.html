@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Vista Previa - CV Generator{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="header">
+        <h1>👁️ Vista Previa del CV</h1>
+    </div>
+    <div style="padding: 40px;">
+        <div class="preview-area">
+            <pre>{{ content }}</pre>
+        </div>
+        <div style="text-align: center; margin-top: 30px;">
+            <a href="{{ url_for('generate') }}" class="btn btn-success">📄 Generar CV</a>
+            <a href="{{ url_for('customize') }}" class="btn btn-primary">🎯 Personalizar</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

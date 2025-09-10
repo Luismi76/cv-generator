@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Generar - CV Generator{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="header">
+        <h1>📄 Generar CV</h1>
+    </div>
+    <div style="padding: 40px;">
+        <form method="POST">
+            <div class="form-group">
+                <label for="fmt">Formato:</label>
+                <select id="fmt" name="fmt" class="form-control">
+                    <option value="md" {{ 'selected' if fmt == 'md' else '' }}>Markdown</option>
+                    <option value="txt" {{ 'selected' if fmt == 'txt' else '' }}>Texto plano</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="outname">Nombre del archivo:</label>
+                <input type="text" id="outname" name="outname" class="form-control" value="{{ outname }}">
+            </div>
+            <div style="text-align: center; margin-top: 30px;">
+                <button type="submit" class="btn btn-success">📥 Generar CV</button>
+            </div>
+        </form>
+        {% if outputs %}
+        <div style="margin-top: 30px;">
+            <h3>Archivos generados:</h3>
+            {% for file in outputs %}
+            <a href="{{ url_for('download', path=file) }}" class="btn btn-primary">📥 Descargar {{ file }}</a>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

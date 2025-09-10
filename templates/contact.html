@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block title %}Contacto - CV Generator{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="header">
+        <h1>📧 Información de Contacto</h1>
+        <p>Configure sus datos personales y de contacto</p>
+    </div>
+    
+    <div style="padding: 40px;">
+        <form method="POST">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+                
+                <!-- Información Personal -->
+                <div class="card">
+                    <h2 style="color: #667eea; margin-bottom: 20px;">
+                        👤 Información Personal
+                    </h2>
+                    
+                    <div class="form-group">
+                        <label for="name">Nombre completo *</label>
+                        <input type="text" id="name" name="name" class="form-control" 
+                               value="{{ cv.contact.name or '' }}" required
+                               placeholder="Ej: Juan Pérez García">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="title">Título profesional</label>
+                        <input type="text" id="title" name="title" class="form-control" 
+                               value="{{ cv.contact.title or '' }}"
+                               placeholder="Ej: Desarrollador Full Stack">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="location">Ubicación</label>
+                        <input type="text" id="location" name="location" class="form-control" 
+                               value="{{ cv.contact.location or '' }}"
+                               placeholder="Ej: Madrid, España">
+                    </div>
+                </div>
+                
+                <!-- Información de Contacto -->
+                <div class="card">
+                    <h2 style="color: #28a745; margin-bottom: 20px;">
+                        📱 Datos de Contacto
+                    </h2>
+                    
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input type="email" id="email" name="email" class="form-control" 
+                               value="{{ cv.contact.email or '' }}" required
+                               placeholder="Ej: juan.perez@email.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">Teléfono</label>
+                        <input type="tel" id="phone" name="phone" class="form-control" 
+                               value="{{ cv.contact.phone or '' }}"
+                               placeholder="Ej: +34 600 123 456">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="links">Enlaces (separados por comas)</label>
+                        <textarea id="links" name="links" class="form-control" rows="3"
+                                  placeholder="Ej: https://linkedin.com/in/usuario, https://github.com/usuario">{% if cv.contact.links %}{{ cv.contact.links | join(', ') }}{% endif %}</textarea>
+                        <small style="color: #6c757d; margin-top: 5px; display: block;">
+                            Incluya LinkedIn, GitHub, portfolio, etc.
+                        </small>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Vista previa -->
+            {% if cv.contact.name or cv.contact.email %}
+            <div class="card" style="margin-top: 30px; background: #f8f9fa;">
+                <h3 style="color: #2c3e50; margin-bottom: 15px;">👁️ Vista Previa</h3>
+                <div style="border-left: 4px solid #667eea; padding-left: 15px;">
+                    {% if cv.contact.name %}
+                        <h4 style="color: #2c3e50; margin-bottom: 5px;">{{ cv.contact.name }}</h4>
+                    {% endif %}
+                    {% if cv.contact.title %}
+                        <p style="color: #667eea; font-weight: 600; margin-bottom: 10px;">{{ cv.contact.title }}</p>
+                    {% endif %}
+                    <div style="color: #6c757d;">
+                        {% if cv.contact.email %}
+                            <span>📧 {{ cv.contact.email }}</span>
+                        {% endif %}
+                        {% if cv.contact.phone %}
+                            <span style="margin-left: 20px;">📱 {{ cv.contact.phone }}</span>
+                        {% endif %}
+                        {% if cv.contact.location %}
+                            <span style="margin-left: 20px;">📍 {{ cv.contact.location }}</span>
+                        {% endif %}
+                    </div>
+                    {% if cv.contact.links %}
+                    <div style="margin-top: 10px;">
+                        {% for link in cv.contact.links %}
+                        <a href="{{ link }}" target="_blank" style="color: #667eea; margin-right: 15px;">🔗 {{ link }}</a>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Botones de acción -->
+            <div style="text-align: center; margin-top: 30px;">
+                <button type="submit" class="btn btn-primary" style="margin-right: 15px;">
+                    💾 Guardar Información
+                </button>
+                <a href="{{ url_for('summary') }}" class="btn btn-success">
+                    ➡️ Continuar al Resumen
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

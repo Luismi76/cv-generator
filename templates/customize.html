@@ -1,0 +1,974 @@
+{% extends "base.html" %}
+
+{% block title %}Personalizar CV - CV Generator{% endblock %}
+
+{% block extra_css %}
+<style>
+    .main-content {
+        display: flex;
+        min-height: 80vh;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        overflow: hidden;
+        margin: 20px;
+    }
+    
+    .sidebar {
+        width: 300px;
+        background: #f8f9fa;
+        padding: 30px 20px;
+        border-right: 1px solid #e9ecef;
+        overflow-y: auto;
+    }
+    
+    .content-area {
+        flex: 1;
+        padding: 30px;
+        overflow-y: auto;
+    }
+    
+    .section-card {
+        background: white;
+        border: 2px solid #e9ecef;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+    }
+    
+    .section-card.active {
+        border-color: #667eea;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+    }
+    
+    .section-header {
+        padding: 20px;
+        background: #f8f9fa;
+        border-bottom: 1px solid #e9ecef;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .section-header h3 {
+        color: #2c3e50;
+        font-size: 1.3em;
+        margin: 0;
+    }
+    
+    .section-toggle {
+        width: 20px;
+        height: 20px;
+        border: 2px solid #667eea;
+        border-radius: 4px;
+        position: relative;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .section-toggle.checked {
+        background: #667eea;
+    }
+    
+    .section-toggle.checked::after {
+        content: '✓';
+        color: white;
+        position: absolute;
+        top: -2px;
+        left: 2px;
+        font-size: 14px;
+        font-weight: bold;
+    }
+    
+    .section-content {
+        padding: 20px;
+        display: none;
+    }
+    
+    .section-content.show {
+        display: block;
+    }
+    
+    .item-list {
+        margin-top: 15px;
+    }
+    
+    .item {
+        background: #f8f9fa;
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 10px;
+        cursor: move;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+    
+    .item:hover {
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        transform: translateY(-2px);
+    }
+    
+    .item.selected {
+        background: #e3f2fd;
+        border-color: #2196f3;
+    }
+    
+    .item-checkbox {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 18px;
+        height: 18px;
+        border: 2px solid #2196f3;
+        border-radius: 3px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .item-checkbox.checked {
+        background: #2196f3;
+    }
+    
+    .item-checkbox.checked::after {
+        content: '✓';
+        color: white;
+        position: absolute;
+        top: -3px;
+        left: 1px;
+        font-size: 12px;
+        font-weight: bold;
+    }
+    
+    .item-title {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 5px;
+        padding-right: 30px;
+    }
+    
+    .item-subtitle {
+        color: #6c757d;
+        font-size: 0.9em;
+        margin-bottom: 8px;
+    }
+    
+    .item-description {
+        color: #495057;
+        font-size: 0.85em;
+        line-height: 1.4;
+    }
+    
+    .template-controls {
+        margin-bottom: 30px;
+    }
+    
+    .template-controls h3 {
+        margin-bottom: 15px;
+        color: #2c3e50;
+    }
+    
+    .btn-group {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+    
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        z-index: 1000;
+    }
+    
+    .modal-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        max-width: 500px;
+        width: 90%;
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+    
+    .modal-content h2 {
+        margin-bottom: 20px;
+        color: #2c3e50;
+    }
+    
+    .preview-area {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 20px;
+        margin-top: 20px;
+        max-height: 400px;
+        overflow-y: auto;
+    }
+    
+    .preview-content {
+        font-family: 'Courier New', monospace;
+        white-space: pre-wrap;
+        line-height: 1.5;
+        color: #2c3e50;
+    }
+    
+    .sortable-placeholder {
+        background: #e9ecef;
+        border: 2px dashed #6c757d;
+        border-radius: 8px;
+        height: 60px;
+        margin-bottom: 10px;
+    }
+    
+    @media (max-width: 768px) {
+        .main-content {
+            flex-direction: column;
+            margin: 10px;
+        }
+        
+        .sidebar {
+            width: 100%;
+            border-right: none;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .btn-group {
+            flex-direction: column;
+        }
+        
+        .modal-content {
+            max-width: 95%;
+            padding: 20px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="header">
+        <h1>🎯 Personalizar CV</h1>
+        <p>Selecciona y ordena los elementos para adaptarlo a cada oferta de trabajo</p>
+    </div>
+    
+    <div class="main-content">
+        <div class="sidebar">
+            <div class="template-controls">
+                <h3>📋 Plantillas</h3>
+                
+                <div class="form-group">
+                    <select id="template-select" class="form-control">
+                        <option value="">Seleccionar plantilla...</option>
+                        {% for name, template in templates.items() %}
+                        <option value="{{ name }}">{{ name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="btn-group">
+                    <button id="load-template-btn" class="btn btn-secondary">📂 Cargar</button>
+                    <button id="save-template-btn" class="btn btn-success">💾 Guardar</button>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <h3>⚙️ Acciones</h3>
+                <div class="btn-group">
+                    <button id="select-all-btn" class="btn btn-primary">✅ Todo</button>
+                    <button id="clear-all-btn" class="btn btn-secondary">❌ Nada</button>
+                    <button id="preview-btn" class="btn btn-primary">👁️ Vista previa</button>
+                    <button id="generate-btn" class="btn btn-success">📄 Generar CV</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="content-area">
+            <!-- Resumen -->
+            <div class="section-card" data-section="summary">
+                <div class="section-header">
+                    <h3>📝 Resumen Profesional</h3>
+                    <div class="section-toggle checked"></div>
+                </div>
+                <div class="section-content show">
+                    <p style="color: #6c757d; font-style: italic;">
+                        {% if cv.summary %}
+                            {% if cv.summary|length > 150 %}
+                                {{ cv.summary[:150] }}...
+                            {% else %}
+                                {{ cv.summary }}
+                            {% endif %}
+                        {% else %}
+                            No hay resumen configurado
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Habilidades -->
+            {% if cv.skills %}
+            <div class="section-card" data-section="skills">
+                <div class="section-header">
+                    <h3>🎯 Habilidades ({{ cv.skills|length }})</h3>
+                    <div class="section-toggle checked"></div>
+                </div>
+                <div class="section-content show">
+                    <div class="item-list" id="skills-list">
+                        {% for skill in cv.skills %}
+                        <div class="item selected" data-index="{{ loop.index0 }}">
+                            <div class="item-checkbox checked"></div>
+                            <div class="item-title">{{ skill.name }}</div>
+                            <div class="item-subtitle">Nivel: {{ skill.level or 'No especificado' }}</div>
+                            {% if skill.tags %}
+                            <div class="item-description">Tags: {{ skill.tags|join(', ') }}</div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Experiencia -->
+            {% if cv.experience %}
+            <div class="section-card" data-section="experience">
+                <div class="section-header">
+                    <h3>💼 Experiencia ({{ cv.experience|length }})</h3>
+                    <div class="section-toggle checked"></div>
+                </div>
+                <div class="section-content show">
+                    <div class="item-list" id="experience-list">
+                        {% for exp in cv.experience %}
+                        <div class="item selected" data-index="{{ loop.index0 }}">
+                            <div class="item-checkbox checked"></div>
+                            <div class="item-title">{{ exp.title }}</div>
+                            <div class="item-subtitle">{{ exp.company }} - {{ exp.start }} a {{ exp.end }}</div>
+                            {% if exp.description %}
+                            <div class="item-description">
+                                {% if exp.description|length > 150 %}
+                                    {{ exp.description[:150] }}...
+                                {% else %}
+                                    {{ exp.description }}
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Proyectos -->
+            {% if cv.projects %}
+            <div class="section-card" data-section="projects">
+                <div class="section-header">
+                    <h3>🚀 Proyectos ({{ cv.projects|length }})</h3>
+                    <div class="section-toggle checked"></div>
+                </div>
+                <div class="section-content show">
+                    <div class="item-list" id="projects-list">
+                        {% for project in cv.projects %}
+                        <div class="item selected" data-index="{{ loop.index0 }}">
+                            <div class="item-checkbox checked"></div>
+                            <div class="item-title">{{ project.title }}</div>
+                            <div class="item-subtitle">{{ project.company or 'Personal' }} - {{ project.start }} a {{ project.end }}</div>
+                            {% if project.description %}
+                            <div class="item-description">
+                                {% if project.description|length > 150 %}
+                                    {{ project.description[:150] }}...
+                                {% else %}
+                                    {{ project.description }}
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Educación -->
+            {% if cv.education %}
+            <div class="section-card" data-section="education">
+                <div class="section-header">
+                    <h3>🎓 Educación ({{ cv.education|length }})</h3>
+                    <div class="section-toggle checked"></div>
+                </div>
+                <div class="section-content show">
+                    <div class="item-list" id="education-list">
+                        {% for edu in cv.education %}
+                        <div class="item selected" data-index="{{ loop.index0 }}">
+                            <div class="item-checkbox checked"></div>
+                            <div class="item-title">{{ edu.degree }}</div>
+                            <div class="item-subtitle">{{ edu.institution }} - {{ edu.start }} a {{ edu.end }}</div>
+                            {% if edu.notes %}
+                            <div class="item-description">
+                                {% if edu.notes|length > 150 %}
+                                    {{ edu.notes[:150] }}...
+                                {% else %}
+                                    {{ edu.notes }}
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Cursos -->
+            {% if cv.courses %}
+            <div class="section-card" data-section="courses">
+                <div class="section-header">
+                    <h3>📚 Cursos ({{ cv.courses|length }})</h3>
+                    <div class="section-toggle checked"></div>
+                </div>
+                <div class="section-content show">
+                    <div class="item-list" id="courses-list">
+                        {% for course in cv.courses %}
+                        <div class="item selected" data-index="{{ loop.index0 }}">
+                            <div class="item-checkbox checked"></div>
+                            <div class="item-title">{{ course.name }}</div>
+                            <div class="item-subtitle">{{ course.issuer }} - {{ course.date }}</div>
+                            {% if course.hours %}
+                            <div class="item-description">{{ course.hours }} horas</div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Otros -->
+            {% if cv.otros %}
+            <div class="section-card" data-section="otros">
+                <div class="section-header">
+                    <h3>📋 Otros ({{ cv.otros|length }})</h3>
+                    <div class="section-toggle checked"></div>
+                </div>
+                <div class="section-content show">
+                    <div class="item-list" id="otros-list">
+                        {% for otro in cv.otros %}
+                        <div class="item selected" data-index="{{ loop.index0 }}">
+                            <div class="item-checkbox checked"></div>
+                            <div class="item-title">{{ otro.title }}</div>
+                            <div class="item-subtitle">{{ otro.institution or 'No especificado' }} - {{ otro.start or otro.periodo or 'Fecha no especificada' }}</div>
+                            {% if otro.description %}
+                            <div class="item-description">
+                                {% if otro.description|length > 150 %}
+                                    {{ otro.description[:150] }}...
+                                {% else %}
+                                    {{ otro.description }}
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Modal para guardar plantilla -->
+<div id="save-modal" class="modal">
+    <div class="modal-content">
+        <h2>💾 Guardar Plantilla</h2>
+        <div class="form-group">
+            <label for="template-name">Nombre de la plantilla:</label>
+            <input type="text" id="template-name" class="form-control" placeholder="Ej: Frontend Developer, Marketing, etc.">
+        </div>
+        <div class="form-group">
+            <label for="template-description">Descripción (opcional):</label>
+            <textarea id="template-description" class="form-control" rows="3" placeholder="Describe para qué tipo de ofertas es esta configuración..."></textarea>
+        </div>
+        <div class="btn-group">
+            <button id="confirm-save-btn" class="btn btn-success">✅ Guardar</button>
+            <button id="cancel-save-btn" class="btn btn-secondary">❌ Cancelar</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para vista previa -->
+<div id="preview-modal" class="modal">
+    <div class="modal-content" style="max-width: 800px;">
+        <h2>👁️ Vista Previa del CV</h2>
+        <div class="form-group">
+            <label for="preview-format">Formato:</label>
+            <select id="preview-format" class="form-control">
+                <option value="md">Markdown</option>
+                <option value="txt">Texto plano</option>
+            </select>
+        </div>
+        <div class="preview-area">
+            <div id="preview-content" class="preview-content">Cargando vista previa...</div>
+        </div>
+        <div class="btn-group">
+            <button id="refresh-preview-btn" class="btn btn-primary">🔄 Actualizar</button>
+            <button id="close-preview-btn" class="btn btn-secondary">❌ Cerrar</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para generar CV -->
+<div id="generate-modal" class="modal">
+    <div class="modal-content">
+        <h2>📄 Generar CV Personalizado</h2>
+        <div class="form-group">
+            <label for="output-name">Nombre del archivo:</label>
+            <input type="text" id="output-name" class="form-control" value="CV_personalizado" placeholder="Nombre del archivo sin extensión">
+        </div>
+        <div class="form-group">
+            <label for="output-format">Formato:</label>
+            <select id="output-format" class="form-control">
+                <option value="md">Markdown (.md)</option>
+                <option value="txt">Texto plano (.txt)</option>
+            </select>
+        </div>
+        <div class="btn-group">
+            <button id="confirm-generate-btn" class="btn btn-success">✅ Generar y Descargar</button>
+            <button id="cancel-generate-btn" class="btn btn-secondary">❌ Cancelar</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+<script>
+class CVCustomizer {
+    constructor() {
+        this.selection = {
+            include_summary: true,
+            skills: { selected: [], order: [] },
+            experience: { selected: [], order: [] },
+            projects: { selected: [], order: [] },
+            education: { selected: [], order: [] },
+            courses: { selected: [], order: [] },
+            otros: { selected: [], order: [] }
+        };
+        
+        this.initializeSelection();
+        this.setupEventListeners();
+        this.setupSortable();
+        console.log('🎯 CVCustomizer inicializado correctamente');
+    }
+    
+    initializeSelection() {
+        document.querySelectorAll('.section-card[data-section]').forEach(card => {
+            const section = card.dataset.section;
+            if (section === 'summary') return;
+            
+            const items = card.querySelectorAll('.item');
+            this.selection[section] = {
+                selected: Array.from(items, (_, index) => index),
+                order: Array.from(items, (_, index) => index)
+            };
+        });
+    }
+    
+    setupEventListeners() {
+        // Toggle de secciones
+        document.querySelectorAll('.section-header').forEach(header => {
+            header.addEventListener('click', (e) => {
+                if (e.target.classList.contains('section-toggle')) return;
+                
+                const content = header.nextElementSibling;
+                const card = header.closest('.section-card');
+                
+                content.classList.toggle('show');
+                card.classList.toggle('active');
+            });
+        });
+        
+        // Toggle de sección completa
+        document.querySelectorAll('.section-toggle').forEach(toggle => {
+            toggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const section = toggle.closest('.section-card').dataset.section;
+                
+                if (section === 'summary') {
+                    this.selection.include_summary = !this.selection.include_summary;
+                    toggle.classList.toggle('checked', this.selection.include_summary);
+                } else {
+                    const isChecked = toggle.classList.contains('checked');
+                    const items = toggle.closest('.section-card').querySelectorAll('.item');
+                    
+                    if (isChecked) {
+                        this.selection[section].selected = [];
+                        items.forEach(item => {
+                            item.classList.remove('selected');
+                            item.querySelector('.item-checkbox').classList.remove('checked');
+                        });
+                        toggle.classList.remove('checked');
+                    } else {
+                        this.selection[section].selected = Array.from(items, (_, index) => index);
+                        this.selection[section].order = Array.from(items, (_, index) => index);
+                        items.forEach(item => {
+                            item.classList.add('selected');
+                            item.querySelector('.item-checkbox').classList.add('checked');
+                        });
+                        toggle.classList.add('checked');
+                    }
+                }
+            });
+        });
+        
+        // Toggle de items individuales
+        document.querySelectorAll('.item-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const item = checkbox.closest('.item');
+                const section = item.closest('.section-card').dataset.section;
+                const index = parseInt(item.dataset.index);
+                
+                const isSelected = item.classList.contains('selected');
+                
+                if (isSelected) {
+                    item.classList.remove('selected');
+                    checkbox.classList.remove('checked');
+                    this.removeFromSelection(section, index);
+                } else {
+                    item.classList.add('selected');
+                    checkbox.classList.add('checked');
+                    this.addToSelection(section, index);
+                }
+                
+                this.updateSectionToggle(section);
+            });
+        });
+        
+        // Botones principales
+        document.getElementById('select-all-btn').addEventListener('click', () => this.selectAll());
+        document.getElementById('clear-all-btn').addEventListener('click', () => this.clearAll());
+        document.getElementById('preview-btn').addEventListener('click', () => this.showPreview());
+        document.getElementById('generate-btn').addEventListener('click', () => this.showGenerateModal());
+        
+        // Plantillas
+        document.getElementById('load-template-btn').addEventListener('click', () => this.loadTemplate());
+        document.getElementById('save-template-btn').addEventListener('click', () => this.showSaveModal());
+        
+        this.setupModalEvents();
+    }
+    
+    setupSortable() {
+        document.querySelectorAll('.item-list').forEach(list => {
+            new Sortable(list, {
+                animation: 150,
+                ghostClass: 'sortable-placeholder',
+                onEnd: (evt) => {
+                    const section = evt.from.closest('.section-card').dataset.section;
+                    this.updateOrder(section, evt.oldIndex, evt.newIndex);
+                }
+            });
+        });
+    }
+    
+    addToSelection(section, index) {
+        if (!this.selection[section].selected.includes(index)) {
+            this.selection[section].selected.push(index);
+            this.selection[section].order.push(this.selection[section].order.length);
+        }
+    }
+    
+    removeFromSelection(section, index) {
+        const selectedIndex = this.selection[section].selected.indexOf(index);
+        if (selectedIndex > -1) {
+            this.selection[section].selected.splice(selectedIndex, 1);
+            this.selection[section].order.splice(selectedIndex, 1);
+            this.selection[section].order = this.selection[section].order.map((val, idx) => idx);
+        }
+    }
+    
+    updateOrder(section, oldIndex, newIndex) {
+        const order = this.selection[section].order;
+        const item = order.splice(oldIndex, 1)[0];
+        order.splice(newIndex, 0, item);
+    }
+    
+    updateSectionToggle(section) {
+        const card = document.querySelector(`[data-section="${section}"]`);
+        const toggle = card.querySelector('.section-toggle');
+        const totalItems = card.querySelectorAll('.item').length;
+        const selectedItems = this.selection[section].selected.length;
+        
+        toggle.classList.toggle('checked', selectedItems === totalItems);
+    }
+    
+    selectAll() {
+        this.selection.include_summary = true;
+        document.querySelector('[data-section="summary"] .section-toggle').classList.add('checked');
+        
+        Object.keys(this.selection).forEach(section => {
+            if (section === 'include_summary') return;
+            
+            const card = document.querySelector(`[data-section="${section}"]`);
+            if (!card) return;
+            
+            const items = card.querySelectorAll('.item');
+            this.selection[section].selected = Array.from(items, (_, index) => index);
+            this.selection[section].order = Array.from(items, (_, index) => index);
+            
+            items.forEach(item => {
+                item.classList.add('selected');
+                item.querySelector('.item-checkbox').classList.add('checked');
+            });
+            
+            card.querySelector('.section-toggle').classList.add('checked');
+        });
+        
+        this.showNotification('Todos los elementos seleccionados', 'success');
+    }
+    
+    clearAll() {
+        this.selection.include_summary = false;
+        document.querySelector('[data-section="summary"] .section-toggle').classList.remove('checked');
+        
+        Object.keys(this.selection).forEach(section => {
+            if (section === 'include_summary') return;
+            
+            const card = document.querySelector(`[data-section="${section}"]`);
+            if (!card) return;
+            
+            this.selection[section].selected = [];
+            this.selection[section].order = [];
+            
+            card.querySelectorAll('.item').forEach(item => {
+                item.classList.remove('selected');
+                item.querySelector('.item-checkbox').classList.remove('checked');
+            });
+            
+            card.querySelector('.section-toggle').classList.remove('checked');
+        });
+        
+        this.showNotification('Todos los elementos deseleccionados', 'info');
+    }
+    
+    async loadTemplate() {
+        const select = document.getElementById('template-select');
+        const templateName = select.value;
+        
+        if (!templateName) {
+            this.showNotification('Por favor selecciona una plantilla', 'warning');
+            return;
+        }
+        
+        try {
+            const response = await fetch(`/personalizar/plantilla/${templateName}`);
+            const template = await response.json();
+            
+            if (template.error) {
+                this.showNotification('Error al cargar la plantilla', 'error');
+                return;
+            }
+            
+            this.applyTemplate(template.selection);
+            this.showNotification(`Plantilla "${templateName}" cargada correctamente`, 'success');
+        } catch (error) {
+            console.error('Error:', error);
+            this.showNotification('Error al cargar la plantilla', 'error');
+        }
+    }
+    
+    applyTemplate(selection) {
+        this.clearAll();
+        this.selection = { ...selection };
+        
+        this.selection.include_summary = selection.include_summary;
+        document.querySelector('[data-section="summary"] .section-toggle')
+            .classList.toggle('checked', selection.include_summary);
+        
+        Object.keys(selection).forEach(section => {
+            if (section === 'include_summary') return;
+            
+            const card = document.querySelector(`[data-section="${section}"]`);
+            if (!card) return;
+            
+            const items = card.querySelectorAll('.item');
+            selection[section].selected.forEach(index => {
+                if (index < items.length) {
+                    items[index].classList.add('selected');
+                    items[index].querySelector('.item-checkbox').classList.add('checked');
+                }
+            });
+            
+            this.updateSectionToggle(section);
+        });
+    }
+    
+    showSaveModal() {
+        document.getElementById('save-modal').style.display = 'block';
+        document.getElementById('template-name').focus();
+    }
+    
+    async showPreview() {
+        document.getElementById('preview-modal').style.display = 'block';
+        await this.updatePreview();
+    }
+    
+    async updatePreview() {
+        const format = document.getElementById('preview-format').value;
+        const previewContent = document.getElementById('preview-content');
+        
+        previewContent.textContent = 'Cargando vista previa...';
+        
+        try {
+            const response = await fetch('/preview/personalizada', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    selection: this.selection,
+                    fmt: format
+                })
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                previewContent.textContent = data.content;
+            } else {
+                previewContent.textContent = 'Error al cargar la vista previa';
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            previewContent.textContent = 'Error de conexión';
+        }
+    }
+    
+    showGenerateModal() {
+        document.getElementById('generate-modal').style.display = 'block';
+        document.getElementById('output-name').focus();
+    }
+    
+    setupModalEvents() {
+        // Modal de guardar plantilla
+        document.getElementById('confirm-save-btn').addEventListener('click', async () => {
+            const name = document.getElementById('template-name').value.trim();
+            const description = document.getElementById('template-description').value.trim();
+            
+            if (!name) {
+                this.showNotification('Por favor ingresa un nombre para la plantilla', 'warning');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/personalizar/guardar', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name,
+                        description,
+                        selection: this.selection,
+                        created: new Date().toISOString()
+                    })
+                });
+                
+                const result = await response.json();
+                if (result.success) {
+                    this.showNotification('Plantilla guardada correctamente', 'success');
+                    document.getElementById('save-modal').style.display = 'none';
+                    setTimeout(() => location.reload(), 1000);
+                } else {
+                    this.showNotification('Error al guardar la plantilla', 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                this.showNotification('Error al guardar la plantilla', 'error');
+            }
+        });
+        
+        document.getElementById('cancel-save-btn').addEventListener('click', () => {
+            document.getElementById('save-modal').style.display = 'none';
+        });
+        
+        // Modal de vista previa
+        document.getElementById('refresh-preview-btn').addEventListener('click', () => {
+            this.updatePreview();
+        });
+        
+        document.getElementById('preview-format').addEventListener('change', () => {
+            this.updatePreview();
+        });
+        
+        document.getElementById('close-preview-btn').addEventListener('click', () => {
+            document.getElementById('preview-modal').style.display = 'none';
+        });
+        
+        // Modal de generar CV
+        document.getElementById('confirm-generate-btn').addEventListener('click', async () => {
+            const name = document.getElementById('output-name').value.trim();
+            const format = document.getElementById('output-format').value;
+            
+            if (!name) {
+                this.showNotification('Por favor ingresa un nombre para el archivo', 'warning');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/generar/personalizado', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        selection: this.selection,
+                        fmt: format,
+                        outname: name
+                    })
+                });
+                
+                const result = await response.json();
+                if (result.success) {
+                    window.location.href = `/download/${result.filename}`;
+                    this.showNotification('CV generado y descargado correctamente', 'success');
+                    document.getElementById('generate-modal').style.display = 'none';
+                } else {
+                    this.showNotification('Error al generar el CV', 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                this.showNotification('Error al generar el CV', 'error');
+            }
+        });
+        
+        document.getElementById('cancel-generate-btn').addEventListener('click', () => {
+            document.getElementById('generate-modal').style.display = 'none';
+        });
+        
+        // Cerrar modales haciendo clic fuera
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        });
+    }
+    
+    showNotification(message, type = 'info') {
+        // Función simple de notificación
+        if (typeof showNotification === 'function') {
+            showNotification(message, type);
+        } else {
+            alert(message);
+        }
+    }
+}
+
+// Inicializar cuando la página esté cargada
+document.addEventListener('DOMContentLoaded', () => {
+    new CVCustomizer();
+});
+</script>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Resumen - CV Generator{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="header">
+        <h1>📝 Resumen Profesional</h1>
+        <p>Escriba un breve resumen de su perfil profesional</p>
+    </div>
+    <div style="padding: 40px;">
+        <form method="POST">
+            <div class="form-group">
+                <label for="summary">Su resumen profesional:</label>
+                <textarea id="summary" name="summary" class="form-control" rows="8" 
+                          placeholder="Escriba aquí un resumen de su experiencia, habilidades y objetivos profesionales...">{{ cv.summary }}</textarea>
+            </div>
+            <div style="text-align: center; margin-top: 30px;">
+                <button type="submit" class="btn btn-primary">�� Guardar Resumen</button>
+                <a href="{{ url_for('list_items', section='skills') }}" class="btn btn-success">➡️ Continuar a Habilidades</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

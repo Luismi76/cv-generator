@@ -1,0 +1,121 @@
+# {{ contact.name or "Nombre" }}
+
+{% if contact.title %}
+## {{ contact.title }}
+{% endif %}
+
+---
+
+## 📧 Contacto
+
+{% if contact.email %}**Email:** {{ contact.email }}  {% endif %}
+{% if contact.phone %}**Teléfono:** {{ contact.phone }}  {% endif %}
+{% if contact.location %}**Ubicación:** {{ contact.location }}  {% endif %}
+
+{% if contact.links %}
+### Enlaces
+{% for link in contact.links %}
+- {{ link }}
+{% endfor %}
+{% endif %}
+
+---
+
+{% if summary %}
+## 📝 Resumen Profesional
+
+{{ summary }}
+
+---
+{% endif %}
+
+{% if skills %}
+## 🎯 Habilidades
+
+{% for skill in skills %}
+- **{{ skill.name }}** {% if skill.level %}({{ skill.level }}){% endif %}{% if skill.tags %} - *{{ skill.tags | join(', ') }}*{% endif %}
+{% endfor %}
+
+---
+{% endif %}
+
+{% if experience %}
+## 💼 Experiencia Profesional
+
+{% for exp in experience %}
+### {{ exp.title }}
+**{{ exp.company }}** - {{ exp.location or '' }}  
+*{{ exp.start }} - {{ exp.end }}*
+
+{% if exp.description %}
+{{ exp.description }}
+{% endif %}
+
+{% if exp.tech %}
+**Tecnologías:** {{ exp.tech | join(', ') }}
+{% endif %}
+
+{% endfor %}
+
+---
+{% endif %}
+
+{% if projects %}
+## 🚀 Proyectos
+
+{% for project in projects %}
+### {{ project.title }}
+{% if project.company %}**{{ project.company }}** - {% endif %}*{{ project.start }} - {{ project.end }}*
+
+{% if project.description %}
+{{ project.description }}
+{% endif %}
+
+{% if project.tech %}
+**Tecnologías:** {{ project.tech | join(', ') }}
+{% endif %}
+
+{% endfor %}
+
+---
+{% endif %}
+
+{% if education %}
+## 🎓 Educación
+
+{% for edu in education %}
+### {{ edu.degree }}
+**{{ edu.institution }}** - *{{ edu.start }} - {{ edu.end }}*
+
+{% if edu.notes %}
+{{ edu.notes }}
+{% endif %}
+
+{% endfor %}
+
+---
+{% endif %}
+
+{% if courses %}
+## 📚 Cursos y Certificaciones
+
+{% for course in courses %}
+- **{{ course.name }}** - {{ course.issuer }} ({{ course.date }}){% if course.hours %} - {{ course.hours }} horas{% endif %}
+{% endfor %}
+
+---
+{% endif %}
+
+{% if otros %}
+## 📋 Información Adicional
+
+{% for otro in otros %}
+### {{ otro.title }}
+{% if otro.institution %}**{{ otro.institution }}** - {% endif %}*{{ otro.start or otro.periodo or 'Fecha no especificada' }}{% if otro.end %} - {{ otro.end }}{% endif %}*
+
+{% if otro.description %}
+{{ otro.description }}
+{% endif %}
+
+{% endfor %}
+{% endif %}

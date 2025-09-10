@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}CV Generator{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{{ url_for('index') }}" class="nav-brand">📄 CV Generator</a>
+            <div class="nav-menu">
+                <a href="{{ url_for('index') }}" class="nav-link">🏠 Inicio</a>
+                <a href="{{ url_for('contact') }}" class="nav-link">📧 Contacto</a>
+                <a href="{{ url_for('summary') }}" class="nav-link">📝 Resumen</a>
+                
+                <div class="nav-dropdown">
+                    <span class="nav-link dropdown-toggle">📋 Secciones ▾</span>
+                    <div class="dropdown-content">
+                        <a href="{{ url_for('list_items', section='skills') }}">🎯 Habilidades</a>
+                        <a href="{{ url_for('list_items', section='experience') }}">💼 Experiencia</a>
+                        <a href="{{ url_for('list_items', section='projects') }}">🚀 Proyectos</a>
+                        <a href="{{ url_for('list_items', section='education') }}">🎓 Educación</a>
+                        <a href="{{ url_for('list_items', section='courses') }}">📚 Cursos</a>
+                        <a href="{{ url_for('list_items', section='otros') }}">📋 Otros</a>
+                    </div>
+                </div>
+                
+                <a href="{{ url_for('customize') }}" class="nav-link highlight">🎯 Personalizar</a>
+                
+                <div class="nav-dropdown">
+                    <span class="nav-link dropdown-toggle">📄 Generar ▾</span>
+                    <div class="dropdown-content">
+                        <a href="{{ url_for('preview') }}">👁️ Vista Previa</a>
+                        <a href="{{ url_for('generate') }}">📄 Generar CV</a>
+                    </div>
+                </div>
+                
+                <a href="{{ url_for('about') }}" class="nav-link">ℹ️ Acerca de</a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
