@@ -48,7 +48,7 @@ La característica principal permite:
 
 ### Opción 1: Ejecutable portable (Recomendado)
 
-1. Descarga la última versión desde [Releases](releases/)
+1. Descarga la última versión desde Releases
 2. Extrae el archivo ZIP
 3. Ejecuta `CV_Generator.exe`
 4. La aplicación se abrirá automáticamente en tu navegador
