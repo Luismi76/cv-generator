@@ -2,7 +2,7 @@
 
 Una aplicación web para crear currículums profesionales personalizados y adaptados a cada oferta de trabajo.
 
-![CV Generator](docs/screenshots/main-interface.png)
+![CV Generator](docs/screenshots/Página_principal.png)
 
 ## 🚀 Características principales
 
@@ -81,7 +81,7 @@ Luego abre tu navegador en `http://127.0.0.1:5000`
 ## 🎨 Capturas de pantalla
 
 ### Interfaz principal
-![Interfaz principal](docs/screenshots/main-interface.png)
+![Interfaz principal](docs/screenshots/Página_principal.png)
 
 ### Personalización inteligente
 ![Personalización](docs/screenshots/customization.png)
