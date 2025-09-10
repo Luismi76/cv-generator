@@ -1,8 +1,20 @@
 # CV Generator - Generador de Currículums Inteligente
 
+![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
+![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey.svg)
+![Python](https://img.shields.io/badge/python-3.8%2B-blue.svg)
+![License](https://img.shields.io/badge/license-MIT-green.svg)
+![Flask](https://img.shields.io/badge/flask-2.3%2B-orange.svg)
+![Status](https://img.shields.io/badge/status-stable-brightgreen.svg)
+
+[![GitHub stars](https://img.shields.io/github/stars/Luismi76/cv-generator.svg?style=social&label=Star)](https://github.com/Luismi76/cv-generator)
+[![GitHub forks](https://img.shields.io/github/forks/Luismi76/cv-generator.svg?style=social&label=Fork)](https://github.com/Luismi76/cv-generator/fork)
+[![GitHub issues](https://img.shields.io/github/issues/Luismi76/cv-generator.svg)](https://github.com/Luismi76/cv-generator/issues)
+[![GitHub last commit](https://img.shields.io/github/last-commit/Luismi76/cv-generator.svg)](https://github.com/Luismi76/cv-generator/commits/main)
+
 Una aplicación web para crear currículums profesionales personalizados y adaptados a cada oferta de trabajo.
 
-![CV Generator](docs/screenshots/Página_principal.png)
+![CV Generator](docs/screenshots/main-interface.png)
 
 ## 🚀 Características principales
 
@@ -36,7 +48,7 @@ La característica principal permite:
 
 ### Opción 1: Ejecutable portable (Recomendado)
 
-1. Descarga la última versión desde Releases
+1. Descarga la última versión desde [Releases](releases/)
 2. Extrae el archivo ZIP
 3. Ejecuta `CV_Generator.exe`
 4. La aplicación se abrirá automáticamente en tu navegador
@@ -81,7 +93,7 @@ Luego abre tu navegador en `http://127.0.0.1:5000`
 ## 🎨 Capturas de pantalla
 
 ### Interfaz principal
-![Interfaz principal](docs/screenshots/Página_principal.png)
+![Interfaz principal](docs/screenshots/main-interface.png)
 
 ### Personalización inteligente
 ![Personalización](docs/screenshots/customization.png)
